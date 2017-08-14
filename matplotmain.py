@@ -1,17 +1,26 @@
 import matplotlib.pyplot as plt
 
+days = [1, 2, 3, 4, 5]
 
-population_ages = [22, 55, 62, 75, 26, 74, 65, 90, 8, 30,
-				   2, 25, 56, 27, 52, 67, 46, 59, 80, 32,
-				   100, 111, 120, 130, 121, 123, 124, 125] 
+sleeping = [7, 8, 6, 11, 7]
+eating = [2, 3, 4, 3, 2]
+working = [7, 8, 7, 2, 2]
+playing = [8, 5, 7, 8, 13]
+
+plt.plot([], [], color='m', label='Sleeping', linewidth=5)
+plt.plot([], [], color='c', label='Eating', linewidth=5)
+plt.plot([], [], color='r', label='Working', linewidth=5)
+plt.plot([], [], color='k', label='Playing', linewidth=5)
 
 
-#ids = [x for x in  range(len(population_ages))]
+plt.stackplot(days, sleeping, eating, working, playing, 
+			  colors=['m', 'c', 'r', 'k'])
 
-bins = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130]
-
-plt.hist(population_ages, bins, histtype='bar', 
-		 rwidth=0.8, label='Populations')
+#Для точок на площині
+#x = [1, 2, 3, 4, 5, 6, 7, 8]
+#y = [5, 2, 4, 2, 1, 4, 5, 2]
+#plt.scatter(x, y, label='skitscat', color='k', 
+#			marker='*', s=100)
 
 
 plt.xlabel('x')
