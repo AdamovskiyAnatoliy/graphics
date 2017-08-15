@@ -7,14 +7,25 @@ eating = [2, 3, 4, 3, 2]
 working = [7, 8, 7, 2, 2]
 playing = [8, 5, 7, 8, 13]
 
-plt.plot([], [], color='m', label='Sleeping', linewidth=5)
-plt.plot([], [], color='c', label='Eating', linewidth=5)
-plt.plot([], [], color='r', label='Working', linewidth=5)
-plt.plot([], [], color='k', label='Playing', linewidth=5)
+slices = [7, 2, 2, 13]
+activities = ['sleeping', 'eating', 'working', 'playing']
+cols = ['c', 'm', 'r', 'b']
+
+plt.pie(slices, 
+		labels=activities, 
+		colors=cols, 
+		startangle=90,
+		shadow=True, 
+		explode=(0, 0.2, 0, 0),
+		autopct='%0.1f%%')
 
 
-plt.stackplot(days, sleeping, eating, working, playing, 
-			  colors=['m', 'c', 'r', 'k'])
+
+
+
+
+#plt.stackplot(days, sleeping, eating, working, playing, 
+#			  colors=['m', 'c', 'r', 'k'])
 
 #Для точок на площині
 #x = [1, 2, 3, 4, 5, 6, 7, 8]
@@ -23,8 +34,8 @@ plt.stackplot(days, sleeping, eating, working, playing,
 #			marker='*', s=100)
 
 
-plt.xlabel('x')
-plt.ylabel('y')
+#plt.xlabel('x')
+#plt.ylabel('y')
 
 plt.title('Intersting Graph\nCheck it out')
 plt.legend()
