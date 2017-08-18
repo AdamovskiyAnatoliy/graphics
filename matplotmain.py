@@ -1,4 +1,5 @@
 import datetime
+import random
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
@@ -12,7 +13,41 @@ r = np.load(datafile, encoding='bytes').view(np.recarray)
 fig = plt.figure()
 ax = plt.subplot2grid((1,1), (0,0))
 
-ax.plot_date(r.date, r.adj_close,'-',label='Price')
+close = []
+
+
+def app_close(start_close, new_close):
+	g = np.pi/2
+	
+	for i in start_close:
+		i = i*(np.sin(g))
+		g += random.choice([0.05, -0.05])
+		new_close.append(i)
+
+	return new_close
+
+app_close(r.adj_close, close)
+
+ax.plot_date(r.date, close,'-',label='Price')
+ax.plot([], [], linewidth=5, label='loss', color='r', alpha=0.5 )
+ax.plot([], [], linewidth=5, label='gain', color='g', alpha=0.5 )
+
+
+
+ax.fill_between(r.date,
+			    close, 
+			    close[0],
+				where=(close>close[0]), 
+				facecolor='g',
+				alpha=0.3 )
+
+ax.fill_between(r.date,
+			    close, 
+			    close[0],
+				where=(close<=close[0]), 
+				facecolor='r',
+				alpha=0.3 )
+
 
 for label in ax.xaxis.get_ticklabels():
 	label.set_rotation(45)
@@ -22,6 +57,10 @@ datemax = datetime.date(r.date.max().year + 1, 1, 1)
 ax.set_xlim(datemin, datemax)
 
 ax.grid(True) # color='g', linestyle='-', linewidth=5)
+ax.xaxis.label.set_color('c')
+ax.yaxis.label.set_color('m')
+#440
+#ax.set_yticks([0, 300, 600, 900])
 
 ax.format_xdata = mdates.DateFormatter('%Y-%m-%d')
 
