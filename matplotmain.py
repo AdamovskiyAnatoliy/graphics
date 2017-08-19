@@ -3,11 +3,20 @@ import random
 import numpy as np
 import matplotlib.ticker as mticker
 import matplotlib.finance as fin
-
+from matplotlib import style
 
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import matplotlib.cbook as cbook
+
+
+#style.use('dark_background')
+style.use('fivethirtyeight')
+print(plt,style.available)
+#style.use('ggplot')
+
+print(plt.__file__)
+
 
 
 datafile = cbook.get_sample_data('goog.npy')
@@ -43,7 +52,13 @@ while x < y:
 
 
 
-fin.candlestick_ohlc(ax, ohlc, width=0.4, colorup='g',alpha=0.6, colordown='r')
+#fin.candlestick_ohlc(ax, ohlc, width=0.4, colorup='g',alpha=0.6, colordown='r')
+
+
+ax.plot(r.date, r.adj_close)
+ax.plot(r.date, close)
+
+
 
 
 for label in ax.xaxis.get_ticklabels():
