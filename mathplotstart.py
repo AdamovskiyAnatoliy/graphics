@@ -1,20 +1,40 @@
-import numpy as np
+import random
 import matplotlib.pyplot as plt
+from matplotlib import style
 
-t = np.arange(-10, 10, 0.1)
+style.use('fivethirtyeight')
 
-plt.figure(1)
-plt.subplot(211)
-plt.plot(t, t, 'r--', t, t**2, t, t**3)
-plt.axis([-10, 10, -100, 100])
-plt.xlabel("X cordenat 1 graf")
-plt.ylabel("Y cordent 1 graf")
-plt.grid(True)
+fig = plt.figure()
 
-plt.subplot(212)
-plt.plot(t, np.sin(t))
-plt.xlabel("X cordenat 2 graf")
-plt.ylabel("Y cordent 2 graf")
-plt.grid(True)
+def create_plots():
+    xs = []
+    ys = []
+
+    for i in range(10):
+        x = i
+        y = random.randrange(10)
+
+        xs.append(x)
+        ys.append(y)
+    return xs, ys
+ 
+ax1 = plt.subplot2grid((6,1), (0,0), rowspan=1, colspan=1)
+ax2 = plt.subplot2grid((6,1), (1,0), rowspan=4, colspan=1)
+ax3 = plt.subplot2grid((6,1), (5,0), rowspan=1, colspan=1)
+
+
+#ax1 = fig.add_subplot(221)
+#ax2 = fig.add_subplot(222)
+#ax3 = fig.add_subplot(212)
+
+
+x, y = create_plots()
+ax1.plot(x,y)
+
+x, y = create_plots()
+ax2.plot(x,y)
+
+x, y = create_plots()
+ax3.plot(x,y)
 
 plt.show()
