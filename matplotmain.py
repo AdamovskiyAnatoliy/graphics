@@ -11,8 +11,8 @@ import matplotlib.cbook as cbook
 
 
 #style.use('dark_background')
-style.use('fivethirtyeight')
-print(plt,style.available)
+#style.use('fivethirtyeight')
+#print(plt,style.available)
 #style.use('ggplot')
 
 print(plt.__file__)
@@ -45,18 +45,18 @@ x = 0
 y = len(r.date)
 ohlc = []
 
-while x < y:
+while x < 20:
 	append_me = r[x][0].toordinal(), r[x][1], r[x][2], r[x][3], r[x][4], r[x][5]
 	ohlc.append(append_me)
 	x += 1
 
 
 
-#fin.candlestick_ohlc(ax, ohlc, width=0.4, colorup='g',alpha=0.6, colordown='r')
+fin.candlestick_ohlc(ax, ohlc, width=0.4, colorup='g',alpha=0.6, colordown='r')
 
 
-ax.plot(r.date, r.adj_close)
-ax.plot(r.date, close)
+#ax.plot(r.date, r.adj_close)
+#ax.plot(r.date, close)
 
 
 
@@ -117,10 +117,23 @@ ax.tick_params(axis='y', colors='c')
 
 #ax.format_xdata = mdates.DateFormatter('%Y-%m-%d')
 
+ax.annotate('Bed News', (r[13][0],r[13][2]), 
+			xytext=(0.8, 0.9), textcoords='axes fraction', 
+			arrowprops=dict(facecolor='grey', color='grey'))
+
+
+font_dict = {'family':'serif', 
+			 'color':'darkred',
+			 'size':15}
+
+
+ax.text(r[10][0].toordinal(), r[1][1], "Text Example",fontdict=font_dict)
+
+
 plt.xlabel('Date', color='c')
 plt.ylabel('Price', color='c')
 plt.title('Interesting Graph', color='c')
-plt.legend()
+#plt.legend()
 plt.subplots_adjust(left=0.15, 
 					bottom=0.18, 
 					right=0.94, 
