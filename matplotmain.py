@@ -37,11 +37,13 @@ r = np.load(datafile, encoding='bytes').view(np.recarray)
 fig = plt.figure()
 
 ax = plt.subplot2grid((6,1), (0,0), rowspan=1, colspan=1)
-plt.title('Interesting Graph', color='c')
+plt.title('Interesting Graph')
 plt.ylabel('H-L')
-ax1 = plt.subplot2grid((6,1), (1,0), rowspan=4, colspan=1)
-plt.ylabel('Price', color='c')
-ax2 = plt.subplot2grid((6,1), (5,0), rowspan=1, colspan=1)
+ax1 = plt.subplot2grid((6,1), (1,0), rowspan=4, colspan=1, sharex=ax)
+plt.ylabel('Price')
+ax1v = ax1.twinx()
+
+ax2 = plt.subplot2grid((6,1), (5,0), rowspan=1, colspan=1, sharex=ax)
 plt.ylabel('MAvgs')
 
 close = []
@@ -70,16 +72,17 @@ ma2 = moving_avavrage(r.adj_close, MA2)
 start = len(r.date[MA2-1:])
 h_l = list(map(high_minus_low, r.open, r.close))
 
-ax.plot_date(r.date, h_l, '-')
+ax.plot_date(r.date[-start:], h_l[-start:], '-')
 
-ax.yaxis.set_major_locator(mticker.MaxNLocator(nbins=5, prune='lower'))
+ax.yaxis.set_major_locator(mticker.MaxNLocator(nbins=4, prune='lower'))
 
 
-fin.candlestick_ohlc(ax1, ohlc, width=0.4, colorup='g',alpha=0.6, colordown='r')
+fin.candlestick_ohlc(ax1, ohlc[-start:], width=0.4, colorup='g',alpha=0.6, colordown='r')
 
 #ax.plot(r.date, r.adj_close)
 #ax.plot(r.date, close)
 
+ax1.yaxis.set_major_locator(mticker.MaxNLocator(nbins=7, prune='upper'))
 ax1.grid(True)
 
 """
@@ -139,6 +142,11 @@ font_dict = {'family':'serif',
 
 ax.text(r[10][0].toordinal(), r[1][1], "Text Example",fontdict=font_dict)
 """
+ax1v.fill_between(r.date[-start:],0 ,r.volume[-start:], facecolor='c', alpha=0.4)
+ax1v.axes.yaxis.set_ticklabels([])
+ax1v.grid(False)
+ax1v.set_ylim(0, 3*r.volume.max())
+
 bbox_props = dict(boxstyle='round4', fc='w', ec='k', lw=1)
 
 ax.annotate(str(r[-1][1]), (r[-1][0].toordinal(), r[-1][1]),
@@ -166,6 +174,7 @@ for label in ax2.xaxis.get_ticklabels():
 ax2.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
 
 ax2.xaxis.set_major_locator(mticker.MaxNLocator(10))
+ax2.yaxis.set_major_locator(mticker.MaxNLocator(nbins=5, prune='upper'))
 
 
 
