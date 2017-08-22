@@ -38,12 +38,11 @@ fig = plt.figure()
 
 ax = plt.subplot2grid((6,1), (0,0), rowspan=1, colspan=1)
 plt.title('Interesting Graph', color='c')
-
+plt.ylabel('H-L')
 ax1 = plt.subplot2grid((6,1), (1,0), rowspan=4, colspan=1)
-plt.xlabel('Date', color='c')
 plt.ylabel('Price', color='c')
-
 ax2 = plt.subplot2grid((6,1), (5,0), rowspan=1, colspan=1)
+plt.ylabel('MAvgs')
 
 close = []
 
@@ -73,17 +72,13 @@ h_l = list(map(high_minus_low, r.open, r.close))
 
 ax.plot_date(r.date, h_l, '-')
 
+ax.yaxis.set_major_locator(mticker.MaxNLocator(nbins=5, prune='lower'))
+
+
 fin.candlestick_ohlc(ax1, ohlc, width=0.4, colorup='g',alpha=0.6, colordown='r')
 
 #ax.plot(r.date, r.adj_close)
 #ax.plot(r.date, close)
-
-for label in ax1.xaxis.get_ticklabels():
-	label.set_rotation(45)
-
-ax1.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
-
-ax1.xaxis.set_major_locator(mticker.MaxNLocator(10))
 
 ax1.grid(True)
 
@@ -150,11 +145,34 @@ ax.annotate(str(r[-1][1]), (r[-1][0].toordinal(), r[-1][1]),
 	xytext = (r[-1][0].toordinal()+4, r[-1][1]), bbox=bbox_props)
 
 
-ax2.plot(r.date[-start:], ma1[-start:])
-ax2.plot(r.date[-start:], ma2[-start:])
+ax2.plot(r.date[-start:], ma1[-start:], linewidth=1)
+ax2.plot(r.date[-start:], ma2[-start:], linewidth=1)
+
+ax2.fill_between(r.date[-start:], ma2[-start:], ma1[-start:], 
+				 where=( ma1[-start:] <  ma2[-start:]),
+				 facecolor='r',
+				 edgecolor='r', 
+				 alpha=0.5)
+
+ax2.fill_between(r.date[-start:], ma2[-start:], ma1[-start:], 
+				 where=( ma1[-start:] >  ma2[-start:]),
+				 facecolor='g',
+				 edgecolor='g', 
+				 alpha=0.5)
+
+for label in ax2.xaxis.get_ticklabels():
+	label.set_rotation(45)
+
+ax2.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
+
+ax2.xaxis.set_major_locator(mticker.MaxNLocator(10))
+
 
 
 #plt.legend()
+plt.setp(ax.get_xticklabels(), visible=False)
+plt.setp(ax1.get_xticklabels(), visible=False)
+
 plt.subplots_adjust(left=0.15, 
 					bottom=0.24, 
 					right=0.94, 
@@ -162,4 +180,4 @@ plt.subplots_adjust(left=0.15,
 					wspace=0.2, 
 					hspace=0)
 
-plt.show()
+plt.show()  
