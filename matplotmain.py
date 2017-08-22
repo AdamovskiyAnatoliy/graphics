@@ -1,13 +1,13 @@
 import datetime
 import random
+
 import numpy as np
 import matplotlib.ticker as mticker
 import matplotlib.finance as fin
-from matplotlib import style
-
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import matplotlib.cbook as cbook
+from matplotlib import style
 
 
 #style.use('dark_background')
@@ -15,28 +15,44 @@ import matplotlib.cbook as cbook
 #print(plt,style.available)
 #style.use('ggplot')
 
-print(plt.__file__)
+#print(plt.__file__)
 
+MA1 = 10
+MA2 = 30
+
+def moving_avavrage(values, window):
+	weights = np.repeat(1.0, window)/window
+	smas = np.convolve(values, weights, 'valid')
+	return smas
+
+def high_minus_low(highs, lows):
+	return highs - lows
 
 
 datafile = cbook.get_sample_data('goog.npy')
 
+#date, open, close, volume, adj_close from
 r = np.load(datafile, encoding='bytes').view(np.recarray)
 
-
 fig = plt.figure()
-ax = plt.subplot2grid((1,1), (0,0))
+
+ax = plt.subplot2grid((6,1), (0,0), rowspan=1, colspan=1)
+plt.title('Interesting Graph', color='c')
+
+ax1 = plt.subplot2grid((6,1), (1,0), rowspan=4, colspan=1)
+plt.xlabel('Date', color='c')
+plt.ylabel('Price', color='c')
+
+ax2 = plt.subplot2grid((6,1), (5,0), rowspan=1, colspan=1)
 
 close = []
 
 def app_close(start_close, new_close):
 	g = np.pi/2
-
 	for i in start_close:
 		i = i*(np.sin(g))
 		g += random.choice([0.05, -0.05])
 		new_close.append(i)
-
 	return new_close
 
 app_close(r.adj_close, close)
@@ -50,27 +66,32 @@ while x < y:
 	ohlc.append(append_me)
 	x += 1
 
+ma1 = moving_avavrage(r.adj_close, MA1)
+ma2 = moving_avavrage(r.adj_close, MA2)
+start = len(r.date[MA2-1:])
+h_l = list(map(high_minus_low, r.open, r.close))
 
+ax.plot_date(r.date, h_l, '-')
 
-fin.candlestick_ohlc(ax, ohlc, width=0.4, colorup='g',alpha=0.6, colordown='r')
-
+fin.candlestick_ohlc(ax1, ohlc, width=0.4, colorup='g',alpha=0.6, colordown='r')
 
 #ax.plot(r.date, r.adj_close)
 #ax.plot(r.date, close)
 
-for label in ax.xaxis.get_ticklabels():
+for label in ax1.xaxis.get_ticklabels():
 	label.set_rotation(45)
 
-ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
+ax1.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
 
-ax.xaxis.set_major_locator(mticker.MaxNLocator(10))
-ax.grid(True)
+ax1.xaxis.set_major_locator(mticker.MaxNLocator(10))
+
+ax1.grid(True)
+
 """
 ax.plot_date(r.date, close,'-',label='Price', color='c')
 ax.plot([], [], linewidth=5, label='loss', color='r', alpha=0.5 )
 ax.plot([], [], linewidth=5, label='gain', color='g', alpha=0.5 )
 #ax.axhline(close[0], color='k', linewidth=5)#лінія приякомусь значені
-
 
 ax.fill_between(r.date,
 			    close, 
@@ -85,9 +106,6 @@ ax.fill_between(r.date,
 				where=(close<=close[0]), 
 				facecolor='r',
 				alpha=0.3 )
-
-
-
 
 for label in ax.xaxis.get_ticklabels():
 	label.set_rotation(45)
@@ -128,13 +146,14 @@ ax.text(r[10][0].toordinal(), r[1][1], "Text Example",fontdict=font_dict)
 """
 bbox_props = dict(boxstyle='round4', fc='w', ec='k', lw=1)
 
-
 ax.annotate(str(r[-1][1]), (r[-1][0].toordinal(), r[-1][1]),
 	xytext = (r[-1][0].toordinal()+4, r[-1][1]), bbox=bbox_props)
 
-plt.xlabel('Date', color='c')
-plt.ylabel('Price', color='c')
-plt.title('Interesting Graph', color='c')
+
+ax2.plot(r.date[-start:], ma1[-start:])
+ax2.plot(r.date[-start:], ma2[-start:])
+
+
 #plt.legend()
 plt.subplots_adjust(left=0.15, 
 					bottom=0.24, 
