@@ -34,7 +34,7 @@ datafile = cbook.get_sample_data('goog.npy')
 #date, open, close, volume, adj_close from
 r = np.load(datafile, encoding='bytes').view(np.recarray)
 
-fig = plt.figure()
+fig = plt.figure()#facecolor='#f0f0f0')
 
 ax = plt.subplot2grid((6,1), (0,0), rowspan=1, colspan=1)
 plt.title('Interesting Graph')
@@ -72,7 +72,7 @@ ma2 = moving_avavrage(r.adj_close, MA2)
 start = len(r.date[MA2-1:])
 h_l = list(map(high_minus_low, r.open, r.close))
 
-ax.plot_date(r.date[-start:], h_l[-start:], '-')
+ax.plot_date(r.date[-start:], h_l[-start:], '-', label='H-L')
 
 ax.yaxis.set_major_locator(mticker.MaxNLocator(nbins=4, prune='lower'))
 
@@ -142,6 +142,7 @@ font_dict = {'family':'serif',
 
 ax.text(r[10][0].toordinal(), r[1][1], "Text Example",fontdict=font_dict)
 """
+ax1v.plot([], [], color='c', alpha=0.4, label='Volume')
 ax1v.fill_between(r.date[-start:],0 ,r.volume[-start:], facecolor='c', alpha=0.4)
 ax1v.axes.yaxis.set_ticklabels([])
 ax1v.grid(False)
@@ -153,8 +154,8 @@ ax.annotate(str(r[-1][1]), (r[-1][0].toordinal(), r[-1][1]),
 	xytext = (r[-1][0].toordinal()+4, r[-1][1]), bbox=bbox_props)
 
 
-ax2.plot(r.date[-start:], ma1[-start:], linewidth=1)
-ax2.plot(r.date[-start:], ma2[-start:], linewidth=1)
+ax2.plot(r.date[-start:], ma1[-start:], linewidth=1, label=str(MA1)+'MA')
+ax2.plot(r.date[-start:], ma2[-start:], linewidth=1, label=str(MA2)+'MA')
 
 ax2.fill_between(r.date[-start:], ma2[-start:], ma1[-start:], 
 				 where=( ma1[-start:] <  ma2[-start:]),
@@ -178,7 +179,6 @@ ax2.yaxis.set_major_locator(mticker.MaxNLocator(nbins=5, prune='upper'))
 
 
 
-#plt.legend()
 plt.setp(ax.get_xticklabels(), visible=False)
 plt.setp(ax1.get_xticklabels(), visible=False)
 
@@ -188,5 +188,17 @@ plt.subplots_adjust(left=0.15,
 					top=0.9, 
 					wspace=0.2, 
 					hspace=0)
+ax.legend()
+leg = ax.legend(loc=9, ncol=2, prop={'size':11})
+leg.get_frame().set_alpha(0.4)
+ax1v.legend()
+leg = ax1v.legend(loc=9, ncol=2, prop={'size':11})
+leg.get_frame().set_alpha(0.4)
+ax2.legend()
+leg = ax2.legend(loc=9, ncol=2, prop={'size':11})
+leg.get_frame().set_alpha(0.4)
+#fir.savefig('google.png', facecolor=fig.get_facecolor())
+
+
 
 plt.show()  
